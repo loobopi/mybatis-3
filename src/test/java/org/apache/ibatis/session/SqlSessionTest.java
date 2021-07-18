@@ -1,5 +1,5 @@
 /**
- *    Copyright 2009-2019 the original author or authors.
+ *    Copyright 2009-2021 the original author or authors.
  *
  *    Licensed under the Apache License, Version 2.0 (the "License");
  *    you may not use this file except in compliance with the License.
@@ -20,6 +20,9 @@ import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertNull;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.junit.jupiter.api.Assertions.fail;
+
+import org.apache.ibatis.builder.SqlSourceBuilder;
+import org.apache.ibatis.mapping.MappedStatement.Builder;
 
 import java.io.Reader;
 import java.util.ArrayList;
@@ -49,6 +52,7 @@ import org.apache.ibatis.domain.blog.mappers.BlogMapper;
 import org.apache.ibatis.exceptions.TooManyResultsException;
 import org.apache.ibatis.executor.result.DefaultResultHandler;
 import org.apache.ibatis.io.Resources;
+import org.apache.ibatis.mapping.Environment;
 import org.apache.ibatis.mapping.MappedStatement;
 import org.apache.ibatis.mapping.SqlCommandType;
 import org.apache.ibatis.mapping.SqlSource;
@@ -64,9 +68,19 @@ class SqlSessionTest extends BaseDataTest {
   @BeforeAll
   static void setup() throws Exception {
     createBlogDataSource();
-    final String resource = "org/apache/ibatis/builder/MapperConfig.xml";
+    //final String resource = "org/apache/ibatis/builder/MapperConfig.xml";
+    final String resource = "resources/mybatis-config.xml";
     final Reader reader = Resources.getResourceAsReader(resource);
     sqlMapper = new SqlSessionFactoryBuilder().build(reader);
+    Configuration configuration = sqlMapper.getConfiguration();
+    SqlSource sqlSource = new SqlSourceBuilder(configuration).parse("select * from schedule", null, null);
+    MappedStatement mappedStatement = new Builder(configuration,"select",sqlSource,SqlCommandType.SELECT).mappedStatement;
+
+    configuration.addMappedStatement(mappedStatement);
+    Environment environment = configuration.getEnvironment();
+    System.out.println(environment);
+    SqlSession sqlSession = sqlMapper.openSession();
+    sqlSession.selectList("select");
   }
 
   @Test

@@ -1,5 +1,5 @@
 /**
- *    Copyright 2009-2020 the original author or authors.
+ *    Copyright 2009-2021 the original author or authors.
  *
  *    Licensed under the Apache License, Version 2.0 (the "License");
  *    you may not use this file except in compliance with the License.
@@ -26,13 +26,15 @@ import org.apache.ibatis.executor.BatchResult;
 /**
  * The primary Java interface for working with MyBatis.
  * Through this interface you can execute commands, get mappers and manage transactions.
- *
+ * Mybatis 唯一工作的java 接口
+ * 通过这个接口你可以执行命令，获取mappers和管理事务
  * @author Clinton Begin
  */
 public interface SqlSession extends Closeable {
 
   /**
    * Retrieve a single row mapped from the statement key.
+   * 根据key获取一个实体
    * @param <T> the returned object type
    * @param statement
    *          the statement
@@ -42,6 +44,7 @@ public interface SqlSession extends Closeable {
 
   /**
    * Retrieve a single row mapped from the statement key and parameter.
+   * 根据语句和参数获取一个实体
    * @param <T> the returned object type
    * @param statement Unique identifier matching the statement to use.
    * @param parameter A parameter object to pass to the statement.
@@ -270,12 +273,14 @@ public interface SqlSession extends Closeable {
 
   /**
    * Retrieves current configuration.
+   * 获取配置
    * @return Configuration
    */
   Configuration getConfiguration();
 
   /**
    * Retrieves a mapper.
+   * 获取mapper
    * @param <T> the mapper type
    * @param type Mapper interface class
    * @return a mapper bound to this SqlSession
@@ -284,6 +289,7 @@ public interface SqlSession extends Closeable {
 
   /**
    * Retrieves inner database connection.
+   * 获取连接
    * @return Connection
    */
   Connection getConnection();

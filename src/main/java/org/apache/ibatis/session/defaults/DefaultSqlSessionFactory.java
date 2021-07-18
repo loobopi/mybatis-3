@@ -34,6 +34,9 @@ import org.apache.ibatis.transaction.managed.ManagedTransactionFactory;
 /**
  * @author Clinton Begin
  */
+/**
+ * 默认sqlSessionFactory
+ */
 public class DefaultSqlSessionFactory implements SqlSessionFactory {
 
   private final Configuration configuration;
@@ -87,6 +90,13 @@ public class DefaultSqlSessionFactory implements SqlSessionFactory {
     return configuration;
   }
 
+  /**
+   *
+   * @param execType
+   * @param level
+   * @param autoCommit
+   * @return
+   */
   private SqlSession openSessionFromDataSource(ExecutorType execType, TransactionIsolationLevel level, boolean autoCommit) {
     Transaction tx = null;
     try {

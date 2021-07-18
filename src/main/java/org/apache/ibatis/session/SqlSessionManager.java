@@ -1,5 +1,5 @@
 /**
- *    Copyright 2009-2019 the original author or authors.
+ *    Copyright 2009-2021 the original author or authors.
  *
  *    Licensed under the Apache License, Version 2.0 (the "License");
  *    you may not use this file except in compliance with the License.
@@ -39,6 +39,7 @@ public class SqlSessionManager implements SqlSessionFactory, SqlSession {
 
   private final ThreadLocal<SqlSession> localSqlSession = new ThreadLocal<>();
 
+  //SqlSessionManager 构造器
   private SqlSessionManager(SqlSessionFactory sqlSessionFactory) {
     this.sqlSessionFactory = sqlSessionFactory;
     this.sqlSessionProxy = (SqlSession) Proxy.newProxyInstance(
@@ -261,6 +262,10 @@ public class SqlSessionManager implements SqlSessionFactory, SqlSession {
     return getConfiguration().getMapper(type, this);
   }
 
+  /**
+   * 获取当前线程保存的sqlSession;
+   * @return
+   */
   @Override
   public Connection getConnection() {
     final SqlSession sqlSession = localSqlSession.get();
@@ -337,6 +342,7 @@ public class SqlSessionManager implements SqlSessionFactory, SqlSession {
     }
   }
 
+  //SqlSession执行拦截器
   private class SqlSessionInterceptor implements InvocationHandler {
     public SqlSessionInterceptor() {
         // Prevent Synthetic Access
@@ -344,7 +350,9 @@ public class SqlSessionManager implements SqlSessionFactory, SqlSession {
 
     @Override
     public Object invoke(Object proxy, Method method, Object[] args) throws Throwable {
+      //获取当前线程SqlSession
       final SqlSession sqlSession = SqlSessionManager.this.localSqlSession.get();
+      //如果SqlSession不为空
       if (sqlSession != null) {
         try {
           return method.invoke(sqlSession, args);
@@ -352,6 +360,7 @@ public class SqlSessionManager implements SqlSessionFactory, SqlSession {
           throw ExceptionUtil.unwrapThrowable(t);
         }
       } else {
+        //如果SqlSession为空，先openSession，再执行方法；
         try (SqlSession autoSqlSession = openSession()) {
           try {
             final Object result = method.invoke(autoSqlSession, args);

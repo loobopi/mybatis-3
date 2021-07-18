@@ -1,5 +1,5 @@
 /**
- *    Copyright 2009-2019 the original author or authors.
+ *    Copyright 2009-2021 the original author or authors.
  *
  *    Licensed under the Apache License, Version 2.0 (the "License");
  *    you may not use this file except in compliance with the License.
@@ -29,11 +29,15 @@ import org.apache.ibatis.type.TypeHandler;
 import org.apache.ibatis.type.TypeHandlerRegistry;
 
 /**
+ * 主要用于处理解析配置文件的内容，包括mapper配置和config文件；
  * @author Clinton Begin
  */
 public abstract class BaseBuilder {
+  //持有配置文件对象，方便解析配置文件后对数据进行设置。
   protected final Configuration configuration;
+  //类别名注册器，里面持有类别名和类的键值对。
   protected final TypeAliasRegistry typeAliasRegistry;
+  //类型处理注册器。我们来看一下类型处理注册器里面的详细实现。
   protected final TypeHandlerRegistry typeHandlerRegistry;
 
   public BaseBuilder(Configuration configuration) {

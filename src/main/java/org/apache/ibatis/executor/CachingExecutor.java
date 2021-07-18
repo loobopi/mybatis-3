@@ -35,6 +35,7 @@ import org.apache.ibatis.transaction.Transaction;
 /**
  * @author Clinton Begin
  * @author Eduardo Macarron
+ * 缓存执行器 ，缓存命中直接返回缓存内的数据，缓存没命中执行数据库查询；
  */
 public class CachingExecutor implements Executor {
 
@@ -161,8 +162,14 @@ public class CachingExecutor implements Executor {
     delegate.clearLocalCache();
   }
 
+  /**
+   * 是否需要更新缓存
+   * @param ms
+   */
   private void flushCacheIfRequired(MappedStatement ms) {
+    //获取缓存
     Cache cache = ms.getCache();
+    //缓存不为空，直接删除缓存；
     if (cache != null && ms.isFlushCacheRequired()) {
       tcm.clear(cache);
     }

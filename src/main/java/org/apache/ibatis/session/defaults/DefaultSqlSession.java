@@ -1,5 +1,5 @@
 /**
- *    Copyright 2009-2020 the original author or authors.
+ *    Copyright 2009-2021 the original author or authors.
  *
  *    Licensed under the Apache License, Version 2.0 (the "License");
  *    you may not use this file except in compliance with the License.
@@ -45,9 +45,16 @@ import org.apache.ibatis.session.SqlSession;
  *
  * @author Clinton Begin
  */
+
+/**
+ * SqlSession 默认继承类
+ * 注意，这个类不是线程安全的
+ */
 public class DefaultSqlSession implements SqlSession {
 
+  //配置类
   private final Configuration configuration;
+  //执行器
   private final Executor executor;
 
   private final boolean autoCommit;
